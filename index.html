@@ -17,8 +17,13 @@
 
     <style>
         /* --- RESET & TYPO --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic sur mobile */
+        }
+        
         html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+        
         body {
             background-color: #ffffff;
             color: #000000;
@@ -27,7 +32,14 @@
             overflow-x: hidden;
         }
 
-        /* --- HEADER FIXE (LEADER) --- */
+        /* Forcer la couleur noire pour TOUS les éléments cliquables */
+        a, button, .close-cart, .qty-btn, .add-btn, .favorite-trigger svg {
+            color: #000000 !important;
+            text-decoration: none;
+            -webkit-appearance: none; /* Supprime le style par défaut iOS */
+        }
+
+        /* --- HEADER FIXE --- */
         header {
             position: fixed;
             top: 20px; left: 20px; right: 20px;
@@ -47,297 +59,320 @@
             text-transform: uppercase;
         }
 
-        .titles a { text-decoration: none; color: inherit; cursor: pointer; }
+        .titles a { color: #000000 !important; }
 
-        /* --- MODAL FULLSCREEN --- */
-        #fullscreen-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            /* FOND PLUS TRANSPARENT ICI (0.7) */
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px); /* Ajoute un léger flou artistique derrière */
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            cursor: zoom-out;
-        }
-
-        #fullscreen-overlay img {
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
-        }
-
-        /* --- BOUTON MENU BURGER (BAS GAUCHE) --- */
-        .menu-trigger {
+        /* --- BOUTON ÉTOILE PLEINE (FAVORIS) --- */
+        .favorite-trigger {
             position: fixed;
             bottom: 30px;
-            left: 20px;
-            z-index: 1001;
+            right: 20px;
+            z-index: 200;
             cursor: pointer;
             background: none;
             border: none;
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            pointer-events: auto;
-            padding: 10px;
-        }
-
-        .menu-trigger span {
-            width: 30px; height: 3px;
-            background: #000;
-            transition: 0.3s;
-        }
-
-        /* --- PANNEAU CATÉGORIES (GAUCHE) --- */
-        #menu-panel {
-            position: fixed;
-            top: 0; left: -100%;
-            width: 300px; height: 100vh;
-            background: #ffffff;
-            z-index: 1000;
-            transition: left 0.5s cubic-bezier(0.8, 0, 0.2, 1);
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
-        }
-
-        #menu-panel.open { left: 0; }
-
-        .cat-link {
-            background: none; border: none;
-            font-family: inherit; font-weight: 700;
-            text-transform: uppercase; cursor: pointer;
-            font-size: 1.5rem; text-align: left;
-            opacity: 0.3; transition: 0.3s;
-        }
-
-        .cat-link.active, .cat-link:hover { opacity: 1; }
-
-        /* --- BOUTON ÉTOILE (BAS DROITE) --- */
-        .favorite-trigger {
-            position: fixed;
-            bottom: 30px; right: 20px;
-            z-index: 200;
-            cursor: pointer;
-            background: none; border: none;
-            display: flex; justify-content: center; align-items: center;
+            justify-content: center;
+            align-items: center;
             transition: transform 0.2s ease;
-            padding: 10px;
+            padding: 0;
         }
 
-        .favorite-trigger svg { width: 40px; height: 40px; fill: #000; }
+        .favorite-trigger svg {
+            width: 40px;
+            height: 40px;
+            fill: #000000; /* Forcé en noir */
+            stroke: none;
+        }
 
-        /* --- SIDE PANEL (FAVORIS - DROITE) --- */
+        .favorite-trigger:hover { transform: scale(1.1); }
+
+        /* --- FLÈCHE D'INDICATION (ACCUEIL) --- */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            animation: bounce 2s infinite;
+            transition: opacity 0.5s ease;
+            background: none;
+            border: none;
+        }
+
+        .indicator-arrow-icon {
+            width: 30px; 
+            height: 30px;
+            border-right: 6px solid #000000;
+            border-bottom: 6px solid #000000;
+            transform: rotate(45deg);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* --- SIDE PANEL (FAVORIS) --- */
         #cart-panel {
             position: fixed;
             top: 0; right: -100%;
-            width: 40vw; height: 100vh;
+            width: 40vw;
+            height: 100vh;
             background: #ffffff;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
             z-index: 1000;
             transition: right 0.5s cubic-bezier(0.8, 0, 0.2, 1);
             padding: 40px;
-            display: flex; flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
         }
+
         #cart-panel.open { right: 0; }
 
-        /* --- OVERLAY GLOBAL --- */
-        #global-overlay {
+        #cart-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.1);
             backdrop-filter: blur(5px);
             z-index: 999;
             display: none;
         }
 
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .cart-header h2 { font-size: 2rem; text-transform: uppercase; font-weight: 900; color: #000; }
+        .close-cart { font-size: 2.5rem; cursor: pointer; background: none; border: none; font-weight: 700; color: #000 !important; }
+
+        .cart-content { flex-grow: 1; overflow-y: auto; color: #000; }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .cart-item-info { display: flex; align-items: center; gap: 15px; }
+        .cart-thumb { width: 50px; height: 65px; object-fit: cover; background: #eee; }
+
+        .quantity-controls { display: flex; align-items: center; gap: 15px; }
+        .qty-btn {
+            background: none !important; 
+            border: none !important;
+            font-family: inherit;
+            font-size: 1.8rem;
+            cursor: pointer; 
+            font-weight: 900;
+            color: #000 !important;
+            padding: 10px;
+        }
+
+        .cart-footer { padding-top: 20px; margin-top: 20px; }
+        .checkout-btn {
+            width: 100%; background: #000; color: #fff !important; border: none; padding: 20px;
+            font-family: inherit; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer;
+            text-decoration: none; display: block; text-align: center;
+        }
+
         /* --- MARQUEE --- */
         .hero { height: 100vh; display: flex; align-items: center; overflow: hidden; position: relative; }
         .marquee-track { display: flex; width: fit-content; animation: marquee-infinite 25s linear infinite; }
-        .marquee-track img { width: 380px; margin-right: 15vw; }
+        .marquee-track img { width: 380px; margin-right: 15vw; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes marquee-infinite { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* --- PORTFOLIO --- */
         main { padding: 0 20px; }
         .work-list { 
-            display: flex; flex-direction: column; 
-            align-items: center; gap: 80px; 
-            margin-top: 10vh; margin-bottom: 100px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 80px; 
+            margin-top: 30vh; 
+            margin-bottom: 100px; 
         }
-        .item { width: 100%; max-width: 800px; }
-        .img-box { cursor: zoom-in; }
-        .img-box img { width: 100%; height: auto; display: block; margin-bottom: 8px; transition: opacity 0.3s; }
-        .img-box img:hover { opacity: 0.9; }
-        .desc { font-size: 1.2rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
-        .add-btn { background: none; border: none; font-weight: 900; font-size: 2.2rem; cursor: pointer; padding: 10px; }
+        .item { width: 100%; max-width: 800px; display: flex; flex-direction: column; }
+        .img-box { width: 100%; height: auto; margin-bottom: 8px; }
+        .img-box img { width: 100%; height: auto; display: block; }
+        .desc { font-size: clamp(1rem, 4vw, 1.2rem); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #000; }
+        .add-btn { background: none !important; border: none !important; font-family: inherit; font-weight: 900; font-size: 2.2rem; cursor: pointer; color: #000 !important; padding: 10px; }
 
-        /* --- RESPONSIVE --- */
+        /* --- FOOTER --- */
+        footer { margin-top: 100px; padding: 40px 0; text-transform: uppercase; display: flex; justify-content: space-between; align-items: flex-end; }
+        .footer-left { display: flex; flex-direction: column; font-weight: 700; font-size: 0.9rem; color: #000; }
+        .footer-left a { color: #000 !important; }
+        
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
+            header { top: 15px; left: 15px; right: 15px; }
             .titles { font-size: 3rem; }
-            #menu-panel { width: 85vw; }
-            #cart-panel { width: 100vw; }
+            #cart-panel { width: 100vw; padding: 30px 20px; }
+            .marquee-track img { width: 220px; margin-right: 10vw; }
+            .work-list { gap: 60px; margin-top: 20vh; }
+            .item { width: 95%; }
+            .indicator-arrow-icon { width: 22px; height: 22px; border-width: 4px; }
+            .scroll-indicator { bottom: 20px; }
+            .favorite-trigger { bottom: 20px; right: 15px; }
+            .favorite-trigger svg { width: 30px; height: 30px; }
+            footer { flex-direction: column; align-items: flex-start; gap: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="global-overlay" onclick="closeAll()"></div>
+    <div id="cart-overlay" onclick="closeCart()"></div>
 
-    <!-- MODAL PLEIN ÉCRAN -->
-    <div id="fullscreen-overlay" onclick="this.style.display='none'">
-        <img id="fullscreen-img" src="" alt="Aperçu">
-    </div>
-
-    <!-- BOUTON MENU BAS GAUCHE -->
-    <button class="menu-trigger" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-    </button>
-
-    <!-- PANNEAU MENU GAUCHE -->
-    <div id="menu-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <h2 style="text-transform:uppercase; font-weight:900;">Catégories</h2>
-            <button onclick="closeAll()" style="font-size:2rem; background:none; border:none; cursor:pointer;">✕</button>
+    <div id="cart-panel">
+        <div class="cart-header">
+            <h2>Favoris</h2>
+            <button class="close-cart" onclick="closeCart()">✕</button>
         </div>
-        <button class="cat-link active" onclick="filtrer('TOUT')">TOUT</button>
-        <button class="cat-link" onclick="filtrer('AFFICHES')">AFFICHES</button>
-        <button class="cat-link" onclick="filtrer('PEINTURES')">PEINTURES</button>
-        <button class="cat-link" onclick="filtrer('OBJETS')">OBJETS</button>
-        <button class="cat-link" onclick="filtrer('LOGOS')">LOGOS</button>
-        <button class="cat-link" onclick="filtrer('PHOTOGRAPHIES')">PHOTOGRAPHIES</button>
+        <div class="cart-content" id="cart-items">
+            <p style="text-transform:uppercase; font-style:italic; opacity:0.5;">Aucun favori pour le moment.</p>
+        </div>
+        <div id="cart-summary" style="display: none;">
+            <div class="cart-footer">
+                <a href="https://www.instagram.com/grimalaart/" target="_blank" class="checkout-btn">Aller sur @grimalaart</a>
+            </div>
+        </div>
     </div>
 
-    <!-- BOUTON ÉTOILE BAS DROITE -->
+    <!-- BOUTON ÉTOILE PLEINE -->
     <button class="favorite-trigger" onclick="openCart()">
-        <svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z"/></svg>
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z" />
+        </svg>
     </button>
 
-    <!-- HEADER -->
     <header>
-        <div class="titles"><a onclick="goHome()">GRIMALAART</a></div>
+        <div class="titles"><a href="https://www.instagram.com/grimalaart/" target="_blank">GRIMALAART</a></div>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
         <div class="marquee-track">
-            <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
+            <img src="GRIMALAART_BLEU.svg" alt="">
+            <img src="GRIMALAART_BLEU.svg" alt="">
+            <img src="GRIMALAART_BLEU.svg" alt="">
+            <img src="GRIMALAART_BLEU.svg" alt="">
+            <img src="GRIMALAART_BLEU.svg" alt="">
         </div>
-    </section>
 
-    <!-- PANNEAU FAVORIS -->
-    <div id="cart-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <h2 style="text-transform:uppercase; font-weight:900;">Favoris</h2>
-            <button onclick="closeAll()" style="font-size:2rem; background:none; border:none; cursor:pointer;">✕</button>
-        </div>
-        <div id="cart-items"></div>
-        <div id="cart-summary" style="display:none; margin-top:20px;">
-            <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
-        </div>
-    </div>
+        <button class="scroll-indicator" id="scrollIndicator" onclick="document.getElementById('work').scrollIntoView();">
+            <div class="indicator-arrow-icon"></div>
+        </button>
+    </section>
 
     <main id="work">
         <div class="work-list"></div>
+
+        <footer>
+            <div class="footer-left">
+                <span>NOÉ GRIMAL</span>
+                <a href="https://www.instagram.com/grimalaart/" target="_blank">@GRIMALAART</a>
+            </div>
+        </footer>
     </main>
 
     <script>
-        // Empêche le scroll automatique au refresh
-        if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
-
         const PRODUITS = [
-            { id: "P1", nom: "POSTER_01", image: "IMAGES/JOUR1_SUMMER - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P2", nom: "POSTER_02", image: "IMAGES/JOUR2_HIVER - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P3", nom: "POSTER_03", image: "IMAGES/JOUR3_SUN - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P4", nom: "POSTER_04", image: "IMAGES/JOUR4_MOUNTAIN - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P5", nom: "POSTER_05", image: "IMAGES/JOUR5_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P6", nom: "POSTER_06", image: "IMAGES/JOUR6_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P7", nom: "POSTER_07", image: "IMAGES/JOUR7_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
-            { id: "P8", nom: "POSTER_08", image: "IMAGES/JOUR8_TECKEL - Grande.jpeg", categorie: "AFFICHES" }
+            { id: "POSTER_01", nom: "POSTER_01", image: "IMAGES/JOUR1_SUMMER - Grande.jpeg" },
+            { id: "POSTER_02", nom: "POSTER_02", image: "IMAGES/JOUR2_HIVER - Grande.jpeg" },
+            { id: "POSTER_03", nom: "POSTER_03", image: "IMAGES/JOUR3_SUN - Grande.jpeg" },
+            { id: "POSTER_04", nom: "POSTER_04", image: "IMAGES/JOUR4_MOUNTAIN - Grande.jpeg" },
+            { id: "POSTER_05", nom: "POSTER_05", image: "IMAGES/JOUR5_TIKIS - Grande.jpeg" },
+            { id: "POSTER_06", nom: "POSTER_06", image: "IMAGES/JOUR6_TIKIS - Grande.jpeg" },
+            { id: "POSTER_07", nom: "POSTER_07", image: "IMAGES/JOUR7_TIKIS - Grande.jpeg" },
+            { id: "POSTER_08", nom: "POSTER_08", image: "IMAGES/JOUR8_TECKEL - Grande.jpeg" },
         ];
 
-        function goHome() { window.scrollTo(0, 0); window.location.href = window.location.pathname; }
+        const workList = document.querySelector('.work-list');
+        PRODUITS.forEach(p => {
+            workList.innerHTML += `
+                <div class="item">
+                    <div class="img-box"><img id="img-${p.id}" src="${p.image}" alt="${p.nom}"></div>
+                    <div class="desc">
+                        <span>${p.nom}</span>
+                        <button class="add-btn" onclick="updateQuantity('${p.id}', 1)">+</button>
+                    </div>
+                </div>
+            `;
+        });
 
-        function toggleMenu() {
-            document.getElementById('menu-panel').classList.toggle('open');
-            document.getElementById('global-overlay').style.display = document.getElementById('menu-panel').classList.contains('open') ? 'block' : 'none';
-        }
+        window.addEventListener('scroll', () => {
+            const indicator = document.getElementById('scrollIndicator');
+            if (window.scrollY > 50) {
+                indicator.style.opacity = '0';
+                indicator.style.pointerEvents = 'none';
+            } else {
+                indicator.style.opacity = '1';
+                indicator.style.pointerEvents = 'auto';
+            }
+        });
+
+        let cart = {};
 
         function openCart() {
             document.getElementById('cart-panel').classList.add('open');
-            document.getElementById('global-overlay').style.display = 'block';
+            document.getElementById('cart-overlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeAll() {
-            document.getElementById('menu-panel').classList.remove('open');
+        function closeCart() {
             document.getElementById('cart-panel').classList.remove('open');
-            document.getElementById('global-overlay').style.display = 'none';
+            document.getElementById('cart-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
-        function openFullscreen(src) {
-            const overlay = document.getElementById('fullscreen-overlay');
-            const img = document.getElementById('fullscreen-img');
-            img.src = src;
-            overlay.style.display = 'flex';
-        }
-
-        function afficherProduits(filtre = 'TOUT') {
-            const list = document.querySelector('.work-list');
-            list.innerHTML = '';
-            const items = filtre === 'TOUT' ? PRODUITS : PRODUITS.filter(p => p.categorie === filtre);
-            
-            items.forEach(p => {
-                list.innerHTML += `
-                    <div class="item">
-                        <div class="img-box" onclick="openFullscreen('${p.image}')">
-                            <img src="${p.image}" alt="${p.nom}">
-                        </div>
-                        <div class="desc">
-                            <span>${p.nom}</span>
-                            <button class="add-btn" onclick="event.stopPropagation(); updateQuantity('${p.id}', 1)">+</button>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        function filtrer(cat) {
-            afficherProduits(cat);
-            closeAll();
-            document.querySelectorAll('.cat-link').forEach(btn => btn.classList.toggle('active', btn.innerText === cat));
-            window.scrollTo({top: window.innerHeight, behavior: 'smooth'});
-        }
-
-        let cart = {};
         function updateQuantity(id, change) {
-            const p = PRODUITS.find(i => i.id === id);
-            if(cart[id]) cart[id].qty += change;
-            else if(change > 0) cart[id] = {nom: p.nom, qty: 1, image: p.image};
-            if(cart[id] && cart[id].qty <= 0) delete cart[id];
+            const prod = PRODUITS.find(p => p.id === id);
+            if (cart[id]) {
+                cart[id].qty += change;
+            } else if (change > 0) {
+                cart[id] = { nom: prod.nom, qty: 1, image: prod.image };
+            }
+            if (cart[id] && cart[id].qty <= 0) delete cart[id];
             renderCart();
-            if(change > 0) openCart();
+            if (change > 0) openCart();
         }
 
         function renderCart() {
             const container = document.getElementById('cart-items');
+            const summary = document.getElementById('cart-summary');
             const keys = Object.keys(cart);
-            container.innerHTML = keys.length ? '' : '<p style="opacity:0.5; font-style:italic;">Votre liste est vide.</p>';
-            keys.forEach(id => {
-                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; text-transform:uppercase; font-size:0.8rem;">
-                    <div style="display:flex; align-items:center; gap:10px;"><img src="${cart[id].image}" style="width:40px; height:50px; object-fit:cover;"><span>${cart[id].nom}</span></div>
-                    <div><button onclick="updateQuantity('${id}', -1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px;">-</button> ${cart[id].qty} <button onclick="updateQuantity('${id}', 1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px;">+</button></div>
-                </div>`;
-            });
-            document.getElementById('cart-summary').style.display = keys.length ? 'block' : 'none';
-        }
 
-        afficherProduits();
+            if (keys.length === 0) {
+                container.innerHTML = '<p style="text-transform:uppercase; font-style:italic; opacity:0.5;">Aucun favori pour le moment.</p>';
+                summary.style.display = 'none';
+                return;
+            }
+
+            summary.style.display = 'block';
+            container.innerHTML = '';
+
+            keys.forEach(id => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div class="cart-item-info">
+                        <img src="${cart[id].image}" class="cart-thumb">
+                        <span>${cart[id].nom}</span>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="qty-btn" onclick="updateQuantity('${id}', -1)">-</button>
+                        <span>${cart[id].qty}</span>
+                        <button class="qty-btn" onclick="updateQuantity('${id}', 1)">+</button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
     </script>
 </body>
 </html>
