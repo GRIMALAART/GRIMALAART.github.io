@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- BALISE DE VÉRIFICATION GOOGLE -->
     <meta name="google-site-verification" content="it3rkycRf06UwCLFWmzgPoisQwQ4hQM-dgFzEMdzAhk" />
     
-    <!-- DESCRIPTION POUR GOOGLE -->
     <meta name="description" content="Portfolio artistique de Noé Grimal - GRIMALAART. Créations graphiques et posters originaux.">
 
     <title>GRIMALAART | NOE GRIMAL</title>
     
-    <!-- FAVICON -->
     <link rel="icon" type="image/svg+xml" href="GRIMALAART_BLEU.svg">
 
     <style>
@@ -27,7 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* --- HEADER FIXE (LEADER) --- */
+        /* --- HEADER FIXE --- */
         header {
             position: fixed;
             top: 20px; left: 20px; right: 20px;
@@ -54,9 +51,8 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            /* FOND PLUS TRANSPARENT ICI (0.7) */
             background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px); /* Ajoute un léger flou artistique derrière */
+            backdrop-filter: blur(10px);
             z-index: 2000;
             display: none;
             justify-content: center;
@@ -71,12 +67,12 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.15);
         }
 
-        /* --- BOUTON MENU BURGER (BAS GAUCHE) --- */
+        /* --- BOUTON MENU BURGER (PERSISTANT) --- */
         .menu-trigger {
             position: fixed;
             bottom: 30px;
             left: 20px;
-            z-index: 1001;
+            z-index: 2001; /* Doit être au-dessus du panneau */
             cursor: pointer;
             background: none;
             border: none;
@@ -93,60 +89,58 @@
             transition: 0.3s;
         }
 
-        /* --- PANNEAU CATÉGORIES (GAUCHE) --- */
-        #menu-panel {
-            position: fixed;
-            top: 0; left: -100%;
-            width: 300px; height: 100vh;
-            background: #ffffff;
-            z-index: 1000;
-            transition: left 0.5s cubic-bezier(0.8, 0, 0.2, 1);
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
-        }
-
-        #menu-panel.open { left: 0; }
-
-        .cat-link {
-            background: none; border: none;
-            font-family: inherit; font-weight: 700;
-            text-transform: uppercase; cursor: pointer;
-            font-size: 1.5rem; text-align: left;
-            opacity: 0.3; transition: 0.3s;
-        }
-
-        .cat-link.active, .cat-link:hover { opacity: 1; }
-
-        /* --- BOUTON ÉTOILE (BAS DROITE) --- */
+        /* --- BOUTON ÉTOILE (PERSISTANT) --- */
         .favorite-trigger {
             position: fixed;
             bottom: 30px; right: 20px;
-            z-index: 200;
+            z-index: 2001; /* Doit être au-dessus du panneau */
             cursor: pointer;
             background: none; border: none;
             display: flex; justify-content: center; align-items: center;
             transition: transform 0.2s ease;
             padding: 10px;
+            pointer-events: auto;
         }
 
         .favorite-trigger svg { width: 40px; height: 40px; fill: #000; }
 
-        /* --- SIDE PANEL (FAVORIS - DROITE) --- */
-        #cart-panel {
+        /* --- PANNEAUX (GAUCHE & DROITE) --- */
+        #menu-panel, #cart-panel {
             position: fixed;
-            top: 0; right: -100%;
-            width: 40vw; height: 100vh;
+            top: 0;
+            height: 100vh;
             background: #ffffff;
             z-index: 1000;
-            transition: right 0.5s cubic-bezier(0.8, 0, 0.2, 1);
-            padding: 40px;
-            display: flex; flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+            transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
         }
+
+        #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
+        #cart-panel { right: -100%; width: 40vw; padding: 40px; }
+
+        #menu-panel.open { left: 0; }
         #cart-panel.open { right: 0; }
+
+        /* --- STYLE DES LIENS MENU --- */
+        .cat-link {
+            background: none; border: none;
+            font-family: inherit; 
+            font-weight: 900;
+            text-transform: uppercase; 
+            cursor: pointer;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            text-align: left;
+            line-height: 0.6; 
+            letter-spacing: -0.07em;
+            opacity: 0.2; 
+            transition: 0.2s;
+            padding: 20px 0;
+            white-space: nowrap;
+        }
+
+        .cat-link.active, .cat-link:hover { opacity: 1; }
 
         /* --- OVERLAY GLOBAL --- */
         #global-overlay {
@@ -159,31 +153,25 @@
             display: none;
         }
 
-        /* --- MARQUEE --- */
+        /* --- MARQUEE & WORK LIST --- */
         .hero { height: 100vh; display: flex; align-items: center; overflow: hidden; position: relative; }
         .marquee-track { display: flex; width: fit-content; animation: marquee-infinite 25s linear infinite; }
         .marquee-track img { width: 380px; margin-right: 15vw; }
         @keyframes marquee-infinite { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-        /* --- PORTFOLIO --- */
         main { padding: 0 20px; }
-        .work-list { 
-            display: flex; flex-direction: column; 
-            align-items: center; gap: 80px; 
-            margin-top: 10vh; margin-bottom: 100px; 
-        }
+        .work-list { display: flex; flex-direction: column; align-items: center; gap: 80px; margin-top: 10vh; margin-bottom: 100px; }
         .item { width: 100%; max-width: 800px; }
         .img-box { cursor: zoom-in; }
         .img-box img { width: 100%; height: auto; display: block; margin-bottom: 8px; transition: opacity 0.3s; }
-        .img-box img:hover { opacity: 0.9; }
         .desc { font-size: 1.2rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
         .add-btn { background: none; border: none; font-weight: 900; font-size: 2.2rem; cursor: pointer; padding: 10px; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             .titles { font-size: 3rem; }
-            #menu-panel { width: 85vw; }
-            #cart-panel { width: 100vw; }
+            #menu-panel, #cart-panel { width: 100vw; }
+            .cat-link { font-size: 3.2rem; white-space: normal; line-height: 0.7; }
         }
     </style>
 </head>
@@ -191,22 +179,19 @@
 
     <div id="global-overlay" onclick="closeAll()"></div>
 
-    <!-- MODAL PLEIN ÉCRAN -->
     <div id="fullscreen-overlay" onclick="this.style.display='none'">
         <img id="fullscreen-img" src="" alt="Aperçu">
     </div>
 
-    <!-- BOUTON MENU BAS GAUCHE -->
     <button class="menu-trigger" onclick="toggleMenu()">
         <span></span><span></span><span></span>
     </button>
 
-    <!-- PANNEAU MENU GAUCHE -->
+    <button class="favorite-trigger" onclick="toggleCart()">
+        <svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z"/></svg>
+    </button>
+
     <div id="menu-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <h2 style="text-transform:uppercase; font-weight:900;">Catégories</h2>
-            <button onclick="closeAll()" style="font-size:2rem; background:none; border:none; cursor:pointer;">✕</button>
-        </div>
         <button class="cat-link active" onclick="filtrer('TOUT')">TOUT</button>
         <button class="cat-link" onclick="filtrer('AFFICHES')">AFFICHES</button>
         <button class="cat-link" onclick="filtrer('PEINTURES')">PEINTURES</button>
@@ -215,41 +200,29 @@
         <button class="cat-link" onclick="filtrer('PHOTOGRAPHIES')">PHOTOGRAPHIES</button>
     </div>
 
-    <!-- BOUTON ÉTOILE BAS DROITE -->
-    <button class="favorite-trigger" onclick="openCart()">
-        <svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z"/></svg>
-    </button>
-
-    <!-- HEADER -->
-    <header>
-        <div class="titles"><a onclick="goHome()">GRIMALAART</a></div>
-    </header>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="marquee-track">
-            <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
-        </div>
-    </section>
-
-    <!-- PANNEAU FAVORIS -->
     <div id="cart-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-            <h2 style="text-transform:uppercase; font-weight:900;">Favoris</h2>
-            <button onclick="closeAll()" style="font-size:2rem; background:none; border:none; cursor:pointer;">✕</button>
-        </div>
+        <h2 style="text-transform:uppercase; font-weight:900; margin-bottom: 40px;">Favoris</h2>
         <div id="cart-items"></div>
         <div id="cart-summary" style="display:none; margin-top:20px;">
             <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
         </div>
     </div>
 
+    <header>
+        <div class="titles"><a onclick="goHome()">GRIMALAART</a></div>
+    </header>
+
+    <section class="hero">
+        <div class="marquee-track">
+            <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
+        </div>
+    </section>
+
     <main id="work">
         <div class="work-list"></div>
     </main>
 
     <script>
-        // Empêche le scroll automatique au refresh
         if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
 
         const PRODUITS = [
@@ -263,16 +236,31 @@
             { id: "P8", nom: "POSTER_08", image: "IMAGES/JOUR8_TECKEL - Grande.jpeg", categorie: "AFFICHES" }
         ];
 
-        function goHome() { window.scrollTo(0, 0); window.location.href = window.location.pathname; }
+        function goHome() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
+        // Fonction Toggle pour le menu
         function toggleMenu() {
-            document.getElementById('menu-panel').classList.toggle('open');
-            document.getElementById('global-overlay').style.display = document.getElementById('menu-panel').classList.contains('open') ? 'block' : 'none';
+            const panel = document.getElementById('menu-panel');
+            const cartPanel = document.getElementById('cart-panel');
+            if (panel.classList.contains('open')) {
+                closeAll();
+            } else {
+                closeAll(); // Ferme les autres avant d'ouvrir
+                panel.classList.add('open');
+                document.getElementById('global-overlay').style.display = 'block';
+            }
         }
 
-        function openCart() {
-            document.getElementById('cart-panel').classList.add('open');
-            document.getElementById('global-overlay').style.display = 'block';
+        // Fonction Toggle pour les favoris
+        function toggleCart() {
+            const panel = document.getElementById('cart-panel');
+            if (panel.classList.contains('open')) {
+                closeAll();
+            } else {
+                closeAll(); // Ferme les autres avant d'ouvrir
+                panel.classList.add('open');
+                document.getElementById('global-overlay').style.display = 'block';
+            }
         }
 
         function closeAll() {
@@ -283,8 +271,7 @@
 
         function openFullscreen(src) {
             const overlay = document.getElementById('fullscreen-overlay');
-            const img = document.getElementById('fullscreen-img');
-            img.src = src;
+            document.getElementById('fullscreen-img').src = src;
             overlay.style.display = 'flex';
         }
 
@@ -292,17 +279,11 @@
             const list = document.querySelector('.work-list');
             list.innerHTML = '';
             const items = filtre === 'TOUT' ? PRODUITS : PRODUITS.filter(p => p.categorie === filtre);
-            
             items.forEach(p => {
                 list.innerHTML += `
                     <div class="item">
-                        <div class="img-box" onclick="openFullscreen('${p.image}')">
-                            <img src="${p.image}" alt="${p.nom}">
-                        </div>
-                        <div class="desc">
-                            <span>${p.nom}</span>
-                            <button class="add-btn" onclick="event.stopPropagation(); updateQuantity('${p.id}', 1)">+</button>
-                        </div>
+                        <div class="img-box" onclick="openFullscreen('${p.image}')"><img src="${p.image}" alt="${p.nom}"></div>
+                        <div class="desc"><span>${p.nom}</span><button class="add-btn" onclick="event.stopPropagation(); updateQuantity('${p.id}', 1)">+</button></div>
                     </div>`;
             });
         }
@@ -321,7 +302,7 @@
             else if(change > 0) cart[id] = {nom: p.nom, qty: 1, image: p.image};
             if(cart[id] && cart[id].qty <= 0) delete cart[id];
             renderCart();
-            if(change > 0) openCart();
+            if(change > 0) { closeAll(); document.getElementById('cart-panel').classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function renderCart() {
