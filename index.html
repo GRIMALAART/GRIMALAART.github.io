@@ -14,14 +14,29 @@
 
     <style>
         /* --- RESET & TYPO --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic */
+        }
+        
         html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+        
         body {
             background-color: #ffffff;
             color: #000000;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+        }
+
+        /* FORCE LE NOIR SUR TOUT (MOBILE & DESKTOP) */
+        a, button, span, div, p, h2, .cat-link, .add-btn, .qty-btn {
+            color: #000000 !important;
+            text-decoration: none;
+            -webkit-appearance: none; /* Désactive le style iOS */
+            border-radius: 0;
         }
 
         /* --- HEADER FIXE --- */
@@ -44,7 +59,7 @@
             text-transform: uppercase;
         }
 
-        .titles a { text-decoration: none; color: inherit; cursor: pointer; }
+        .titles a { color: #000000 !important; }
 
         /* --- MODAL FULLSCREEN --- */
         #fullscreen-overlay {
@@ -60,19 +75,12 @@
             cursor: zoom-out;
         }
 
-        #fullscreen-overlay img {
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
-        }
-
-        /* --- BOUTON MENU BURGER (PERSISTANT) --- */
+        /* --- BOUTONS PERSISTANTS --- */
         .menu-trigger {
             position: fixed;
             bottom: 30px;
             left: 20px;
-            z-index: 2001; /* Doit être au-dessus du panneau */
+            z-index: 2001;
             cursor: pointer;
             background: none;
             border: none;
@@ -85,26 +93,24 @@
 
         .menu-trigger span {
             width: 30px; height: 3px;
-            background: #000;
+            background: #000000 !important;
             transition: 0.3s;
         }
 
-        /* --- BOUTON ÉTOILE (PERSISTANT) --- */
         .favorite-trigger {
             position: fixed;
             bottom: 30px; right: 20px;
-            z-index: 2001; /* Doit être au-dessus du panneau */
+            z-index: 2001;
             cursor: pointer;
             background: none; border: none;
             display: flex; justify-content: center; align-items: center;
-            transition: transform 0.2s ease;
             padding: 10px;
             pointer-events: auto;
         }
 
-        .favorite-trigger svg { width: 40px; height: 40px; fill: #000; }
+        .favorite-trigger svg { width: 40px; height: 40px; fill: #000000 !important; }
 
-        /* --- PANNEAUX (GAUCHE & DROITE) --- */
+        /* --- PANNEAUX --- */
         #menu-panel, #cart-panel {
             position: fixed;
             top: 0;
@@ -115,6 +121,7 @@
             flex-direction: column;
             box-shadow: 0 0 30px rgba(0,0,0,0.05);
             transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
+            overflow-x: hidden;
         }
 
         #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
@@ -132,15 +139,15 @@
             cursor: pointer;
             font-size: clamp(2.5rem, 6vw, 4.5rem);
             text-align: left;
-            line-height: 0.6; 
+            line-height: 0.55; 
             letter-spacing: -0.07em;
             opacity: 0.2; 
             transition: 0.2s;
-            padding: 20px 0;
+            padding: 8px 0;
             white-space: nowrap;
         }
 
-        .cat-link.active, .cat-link:hover { opacity: 1; }
+        .cat-link.active, .cat-link:hover { opacity: 1; color: #000000 !important; }
 
         /* --- OVERLAY GLOBAL --- */
         #global-overlay {
@@ -162,16 +169,25 @@
         main { padding: 0 20px; }
         .work-list { display: flex; flex-direction: column; align-items: center; gap: 80px; margin-top: 10vh; margin-bottom: 100px; }
         .item { width: 100%; max-width: 800px; }
-        .img-box { cursor: zoom-in; }
-        .img-box img { width: 100%; height: auto; display: block; margin-bottom: 8px; transition: opacity 0.3s; }
-        .desc { font-size: 1.2rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
-        .add-btn { background: none; border: none; font-weight: 900; font-size: 2.2rem; cursor: pointer; padding: 10px; }
+        .img-box img { width: 100%; height: auto; display: block; margin-bottom: 8px; }
+        
+        .desc { font-size: 1.2rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: #000000 !important; }
+        .add-btn { background: none; border: none; font-weight: 900; font-size: 2.2rem; cursor: pointer; padding: 10px; color: #000000 !important; }
 
-        /* --- RESPONSIVE --- */
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
             .titles { font-size: 3rem; }
             #menu-panel, #cart-panel { width: 100vw; }
-            .cat-link { font-size: 3.2rem; white-space: normal; line-height: 0.7; }
+            
+            .cat-link { 
+                font-size: 2.8rem; 
+                line-height: 0.55;
+                padding: 12px 0;
+                white-space: nowrap; 
+            }
+            
+            #menu-panel { padding: 20px; }
+            .checkout-btn { color: #ffffff !important; } /* Garde le texte du bouton final en blanc sur fond noir */
         }
     </style>
 </head>
@@ -204,7 +220,7 @@
         <h2 style="text-transform:uppercase; font-weight:900; margin-bottom: 40px;">Favoris</h2>
         <div id="cart-items"></div>
         <div id="cart-summary" style="display:none; margin-top:20px;">
-            <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
+            <a href="https://www.instagram.com/grimalaart/" target="_blank" class="checkout-btn" style="display:block; background:#000; color:#fff !important; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
         </div>
     </div>
 
@@ -238,26 +254,23 @@
 
         function goHome() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
-        // Fonction Toggle pour le menu
         function toggleMenu() {
             const panel = document.getElementById('menu-panel');
-            const cartPanel = document.getElementById('cart-panel');
             if (panel.classList.contains('open')) {
                 closeAll();
             } else {
-                closeAll(); // Ferme les autres avant d'ouvrir
+                closeAll();
                 panel.classList.add('open');
                 document.getElementById('global-overlay').style.display = 'block';
             }
         }
 
-        // Fonction Toggle pour les favoris
         function toggleCart() {
             const panel = document.getElementById('cart-panel');
             if (panel.classList.contains('open')) {
                 closeAll();
             } else {
-                closeAll(); // Ferme les autres avant d'ouvrir
+                closeAll();
                 panel.classList.add('open');
                 document.getElementById('global-overlay').style.display = 'block';
             }
@@ -302,17 +315,21 @@
             else if(change > 0) cart[id] = {nom: p.nom, qty: 1, image: p.image};
             if(cart[id] && cart[id].qty <= 0) delete cart[id];
             renderCart();
-            if(change > 0) { closeAll(); document.getElementById('cart-panel').classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
+            if(change > 0) { 
+                closeAll(); 
+                document.getElementById('cart-panel').classList.add('open'); 
+                document.getElementById('global-overlay').style.display = 'block'; 
+            }
         }
 
         function renderCart() {
             const container = document.getElementById('cart-items');
             const keys = Object.keys(cart);
-            container.innerHTML = keys.length ? '' : '<p style="opacity:0.5; font-style:italic;">Votre liste est vide.</p>';
+            container.innerHTML = keys.length ? '' : '<p style="opacity:0.5; font-style:italic; color:#000;">Votre liste est vide.</p>';
             keys.forEach(id => {
-                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; text-transform:uppercase; font-size:0.8rem;">
+                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; text-transform:uppercase; font-size:0.8rem; color:#000;">
                     <div style="display:flex; align-items:center; gap:10px;"><img src="${cart[id].image}" style="width:40px; height:50px; object-fit:cover;"><span>${cart[id].nom}</span></div>
-                    <div><button onclick="updateQuantity('${id}', -1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px;">-</button> ${cart[id].qty} <button onclick="updateQuantity('${id}', 1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px;">+</button></div>
+                    <div><button onclick="updateQuantity('${id}', -1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px; color:#000;">-</button> ${cart[id].qty} <button onclick="updateQuantity('${id}', 1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px; color:#000;">+</button></div>
                 </div>`;
             });
             document.getElementById('cart-summary').style.display = keys.length ? 'block' : 'none';
