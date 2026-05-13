@@ -122,12 +122,18 @@
         
         /* On force la taille des logos SVG pour éviter qu'ils ne s'étendent */
         .marquee-track img { 
-            height: 120px; /* Ajuste cette hauteur selon tes préférences */
+            height: 200px; /* Ajuste cette hauteur selon tes préférences */
             width: auto;
             margin-right: 15vw; 
             flex-shrink: 0;
         }
-        
+
+        /* --- Ajustement pour Mobile --- */
+        @media (max-width: 768px) {
+            .marquee-track img { 
+                height: 180px; /* Taille intermédiaire pour les téléphones */
+            }
+            
         @keyframes marquee-infinite { 
             0% { transform: translateX(0); } 
             100% { transform: translateX(-50%); } 
