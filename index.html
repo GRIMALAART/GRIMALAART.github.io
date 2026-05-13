@@ -18,7 +18,7 @@
             margin: 0; 
             padding: 0; 
             box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu au clic */
+            -webkit-tap-highlight-color: transparent; 
         }
         
         html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
@@ -31,11 +31,11 @@
             overflow-x: hidden;
         }
 
-        /* FORCE LE NOIR SUR TOUT (MOBILE & DESKTOP) */
+        /* FORCE LE NOIR SUR TOUT */
         a, button, span, div, p, h2, .cat-link, .add-btn, .qty-btn {
             color: #000000 !important;
             text-decoration: none;
-            -webkit-appearance: none; /* Désactive le style iOS */
+            -webkit-appearance: none;
             border-radius: 0;
         }
 
@@ -76,9 +76,9 @@
         }
 
         #fullscreen-overlay img { 
-            max-width: 95vw; /* Ne dépasse jamais la largeur de l'écran */
-            max-height: 90vh; /* Ne dépasse jamais la hauteur de l'écran */
-            object-fit: contain; /* Garde le ratio de l'image */
+            max-width: 95vw;
+            max-height: 90vh;
+            object-fit: contain;
         }
 
         /* --- BOUTONS PERSISTANTS --- */
@@ -126,6 +126,7 @@
             flex-direction: column;
             transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
             overflow-x: hidden;
+            background: #ffffff;
         }
 
         #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
@@ -134,7 +135,6 @@
         #menu-panel.open { left: 0; }
         #cart-panel.open { right: 0; }
 
-        /* --- STYLE DES LIENS MENU --- */
         .cat-link {
             background: none; border: none;
             font-family: inherit; 
@@ -153,7 +153,6 @@
 
         .cat-link.active, .cat-link:hover { opacity: 1; color: #000000 !important; }
 
-        /* --- OVERLAY GLOBAL --- */
         #global-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -171,27 +170,57 @@
         @keyframes marquee-infinite { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         main { padding: 0 20px; }
-        .work-list { display: flex; flex-direction: column; align-items: center; gap: 80px; margin-top: 10vh; margin-bottom: 100px; }
-        .item { width: 100%; max-width: 300px; }
-        .img-box img { width: 100%; height: auto; display: block; margin-bottom: 2px; }
         
-        .desc { font-size: 0.9rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; font-weight: 700; line-height: 0.9; color: #000000 !important; }
-        .add-btn { background: none; border: none; font-weight: 900; font-size: 2.2rem; cursor: pointer; padding: 10px; color: #000000 !important; }
+        .work-list { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 100px; 
+            margin-top: 10vh; 
+            margin-bottom: 100px; 
+        }
+        
+        /* CONFIGURATION ITEM POUR COLLER LÉGENDE */
+        .item { 
+            width: 100%; 
+            max-width: 300px; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .img-box {
+            line-height: 0; /* Supprime l'espace résiduel sous l'image */
+        }
+
+        .img-box img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            margin-bottom: 0; 
+            cursor: zoom-in; 
+        }
+        
+        .desc { 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-weight: 700; 
+            line-height: 0.85; /* INTERLIGNAGE SERRÉ */
+            margin-top: -2px; /* COLLE À L'IMAGE */
+            padding-top: 5px; 
+            color: #000000 !important; 
+        }
+        
+        .add-btn { background: none; border: none; font-weight: 900; font-size: 1.8rem; cursor: pointer; padding: 5px; color: #000000 !important; }
 
         /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
             .titles { font-size: 3rem; }
             #menu-panel, #cart-panel { width: 100vw; }
-            
-            .cat-link { 
-                font-size: 2.8rem; 
-                line-height: 0.55;
-                padding: 12px 0;
-                white-space: nowrap; 
-            }
-            
+            .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; white-space: nowrap; }
             #menu-panel { padding: 20px; }
-            .checkout-btn { color: #ffffff !important; } /* Garde le texte du bouton final en blanc sur fond noir */
         }
     </style>
 </head>
@@ -290,31 +319,18 @@
             { id: "P40", nom: "FRAGMENTS DE NOUS", image: "IMAGES/AFFICHES/FRAGMENTS DE NOUS.jpg", categorie: "AFFICHES" },
             { id: "P41", nom: "INTRA-MUROS", image: "IMAGES/AFFICHES/INTRA-MUROS.jpeg", categorie: "AFFICHES" },
             { id: "P42", nom: "JO 2028", image: "IMAGES/AFFICHES/JO 2028.jpeg", categorie: "AFFICHES" }
-
         ];
-
-        function goHome() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
         function toggleMenu() {
             const panel = document.getElementById('menu-panel');
-            if (panel.classList.contains('open')) {
-                closeAll();
-            } else {
-                closeAll();
-                panel.classList.add('open');
-                document.getElementById('global-overlay').style.display = 'block';
-            }
+            if (panel.classList.contains('open')) { closeAll(); } 
+            else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function toggleCart() {
             const panel = document.getElementById('cart-panel');
-            if (panel.classList.contains('open')) {
-                closeAll();
-            } else {
-                closeAll();
-                panel.classList.add('open');
-                document.getElementById('global-overlay').style.display = 'block';
-            }
+            if (panel.classList.contains('open')) { closeAll(); } 
+            else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function closeAll() {
@@ -377,6 +393,7 @@
         }
 
         afficherProduits();
+        function goHome() { window.scrollTo({top: 0, behavior: 'smooth'}); }
     </script>
 </body>
 </html>
