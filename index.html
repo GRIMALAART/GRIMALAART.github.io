@@ -50,6 +50,33 @@
             text-transform: uppercase;
         }
 
+        /* --- BOUTON PROFIL (PROFIL.png) --- */
+        .profile-trigger {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2001;
+            cursor: pointer;
+            background: none;
+            border: none;
+            pointer-events: auto;
+        }
+
+        .profile-trigger img {
+            width: 55px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        /* --- OVERLAY GLOBAL (BLUR) --- */
+        #global-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999; display: none;
+        }
+
         /* --- MODAL FULLSCREEN --- */
         #fullscreen-overlay {
             position: fixed;
@@ -62,7 +89,7 @@
 
         #fullscreen-overlay img { max-width: 95vw; max-height: 90vh; object-fit: contain; }
 
-        /* --- BOUTONS PERSISTANTS --- */
+        /* --- BOUTONS NAVIGATION --- */
         .menu-trigger {
             position: fixed; bottom: 30px; left: 20px; z-index: 2001;
             cursor: pointer; background: none; border: none;
@@ -78,19 +105,23 @@
         }
         .favorite-trigger svg { width: 40px; height: 40px; fill: #000000 !important; }
 
-        /* --- PANNEAUX (MODIFIÉS POUR TRANSPARENCE TOTALE) --- */
-        #menu-panel, #cart-panel {
+        /* --- PANNEAUX (TRANSPARENTS) --- */
+        #menu-panel, #cart-panel, #about-panel {
             position: fixed; top: 0; height: 100vh; z-index: 1000;
             display: flex; flex-direction: column;
             transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
             overflow-x: hidden; 
-            background: transparent; /* Suppression de l'arrière-plan du panneau */
-            backdrop-filter: none;    /* Suppression du flou local pour éviter la ligne nette */
+            background: transparent;
         }
         #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
-        #cart-panel { right: -100%; width: 40vw; padding: 40px; }
+        #cart-panel, #about-panel { right: -100%; width: 40vw; padding: 40px; }
+        
         #menu-panel.open { left: 0; }
-        #cart-panel.open { right: 0; }
+        #cart-panel.open, #about-panel.open { right: 0; }
+
+        .about-content { margin-top: 100px; }
+        .about-content h2 { font-weight: 900; text-transform: uppercase; font-size: 2rem; margin-bottom: 20px; }
+        .about-content p { font-size: 1.1rem; line-height: 1.4; font-weight: 600; text-transform: uppercase; }
 
         .cat-link {
             background: none; border: none; font-family: inherit; font-weight: 900;
@@ -101,35 +132,17 @@
         }
         .cat-link.active, .cat-link:hover { opacity: 1; }
 
-        /* --- GLOBAL OVERLAY (C'EST LUI QUI FAIT LE BLUR SUR TOUT LE FOND) --- */
-        #global-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(255, 255, 255, 0.1); /* Voile blanc ultra léger */
-            backdrop-filter: blur(20px);           /* Flou appliqué à tout l'écran */
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 999; display: none;
-        }
-
-        /* --- MARQUEE --- */
+        /* --- MARQUEE (FIXÉ) --- */
         .hero { 
-            height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            overflow: hidden; 
-            position: relative; 
+            height: 100vh; display: flex; align-items: center; overflow: hidden; position: relative; 
         }
-        
         .marquee-track { 
-            display: flex; 
-            width: max-content; 
+            display: flex; width: max-content; 
             animation: marquee-infinite 25s linear infinite; 
+            will-change: transform;
         }
-        
         .marquee-track img { 
-            height: 250px; 
-            width: auto;
-            margin-right: 15vw; 
-            flex-shrink: 0;
+            height: 250px; width: auto; margin-right: 15vw; flex-shrink: 0; 
         }
 
         @keyframes marquee-infinite { 
@@ -140,59 +153,40 @@
         /* --- WORK LIST --- */
         main { padding: 0 20px; }
         .work-list { display: flex; flex-direction: column; align-items: center; gap: 120px; margin-top: 10vh; margin-bottom: 100px; }
-        
         .item { width: 100%; max-width: 300px; display: block; }
-
         .img-box { line-height: 0; display: block; }
         .img-box img { width: 100%; height: auto; display: block; cursor: zoom-in; }
         
         .desc { 
-            font-size: 1rem; 
-            text-transform: uppercase; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-start; 
-            font-weight: 700; 
-            line-height: 1; 
-            margin-top: 0;
-            padding-top: 4px; 
-            position: relative;
-            top: -2px; 
-            color: #000000 !important; 
+            font-size: 1rem; text-transform: uppercase; 
+            display: flex; justify-content: space-between; align-items: flex-start; 
+            font-weight: 700; line-height: 1; padding-top: 4px; 
+            position: relative; top: -2px; 
         }
         
         .add-btn { 
-            background: none; 
-            border: none; 
-            font-weight: 900; 
-            font-size: 1.8rem; 
-            cursor: pointer; 
-            padding: 0; 
-            margin-left: 15px;
-            line-height: 0.7; 
-            height: 1rem; 
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
+            background: none; border: none; font-weight: 900; font-size: 1.8rem; 
+            cursor: pointer; padding: 0; margin-left: 15px; line-height: 0.7; 
+            height: 1rem; display: flex; align-items: center; flex-shrink: 0;
         }
 
-        /* --- RESPONSIVE MOBILE --- */
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
             .titles { font-size: 3rem; }
-            #menu-panel, #cart-panel { width: 100vw; }
-            .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; }
-            #menu-panel { padding: 20px; }
+            #menu-panel, #cart-panel, #about-panel { width: 100vw; }
+            .cat-link { font-size: 2.8rem; line-height: 0.55; }
             .marquee-track img { height: 150px; }
-            .desc { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
 
     <div id="global-overlay" onclick="closeAll()"></div>
-    <div id="fullscreen-overlay" onclick="this.style.display='none'">
-        <img id="fullscreen-img" src="" alt="Aperçu">
-    </div>
+    <div id="fullscreen-overlay" onclick="this.style.display='none'"><img id="fullscreen-img" src=""></div>
+
+    <button class="profile-trigger" onclick="toggleAbout()">
+        <img src="PROFIL.png" alt="Profil">
+    </button>
 
     <button class="menu-trigger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
     <button class="favorite-trigger" onclick="toggleCart()">
@@ -214,7 +208,19 @@
         <h2 style="text-transform:uppercase; font-weight:900; margin-bottom: 40px;">Favoris</h2>
         <div id="cart-items"></div>
         <div id="cart-summary" style="display:none; margin-top:20px;">
-            <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff !important; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
+            <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff !important; text-align:center; padding:20px; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
+        </div>
+    </div>
+
+    <div id="about-panel">
+        <div class="about-content">
+            <h2>À PROPOS</h2>
+            <p>
+                Noé Grimal - GRIMALAART.<br><br>
+                Étudiant à l'ESADHAR.<br>
+                Créations graphiques, posters originaux et recherches visuelles.<br><br>
+                Ceci est mon parcours artistique.
+            </p>
         </div>
     </div>
 
@@ -238,6 +244,7 @@
             { id: "P4", nom: "POSTER (04)", image: "IMAGES/AFFICHES/JOUR4_MOUNTAIN - Grande.jpeg", categorie: "AFFICHES" },
             { id: "P5", nom: "POSTER (05)", image: "IMAGES/AFFICHES/JOUR5_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
             { id: "P6", nom: "POSTER (06)", image: "IMAGES/AFFICHES/JOUR6_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P7", nom: "POSTER (07)", image: "IMAGES/AFFICHES/JOUR7_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
             { id: "P8", nom: "POSTER (08)", image: "IMAGES/AFFICHES/JOUR8_TECKEL - Grande.jpeg", categorie: "AFFICHES" },
             { id: "P9", nom: "L'HOMME À LA TONDEUSE ET LA FILLE À LA RAQUETTE", image: "IMAGES/PEINTURES/TONDEUSE.jpg", categorie: "PEINTURES" },
             { id: "P10", nom: "TRANSITION ÉNERGÉTIQUE", image: "IMAGES/PEINTURES/STATION-SERVICE.jpg", categorie: "PEINTURES" },
@@ -246,7 +253,7 @@
             { id: "P13", nom: "BARQUETTE DE HOMARD", image: "IMAGES/PEINTURES/BARQUETTE.jpg", categorie: "PEINTURES" },
             { id: "P14", nom: "TROIS HOMMES À LA PISCINE", image: "IMAGES/PEINTURES/3 HOMMES EN SLIP.jpg", categorie: "PEINTURES" },
             { id: "P15", nom: "BOX TO BOX", image: "IMAGES/ARCHITECTURE/BOX TO BOX.jpeg", categorie: "ARCHITECTURE" },
-            { id: "P16", nom: "CARTE ROUEN-NANTES", image: "IMAGES/ARCHITECTURE/CARTE ROUEN:NANTES.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P16", nom: "CARTE ROUEN:NANTES", image: "IMAGES/ARCHITECTURE/CARTE ROUEN:NANTES.jpeg", categorie: "ARCHITECTURE" },
             { id: "P17", nom: "CARTE SARDAIGNE", image: "IMAGES/ARCHITECTURE/CARTE SARDAIGNE.jpeg", categorie: "ARCHITECTURE" },
             { id: "P18", nom: "ESADHAR", image: "IMAGES/ARCHITECTURE/ESADHAR.jpeg", categorie: "ARCHITECTURE" },
             { id: "P19", nom: "MOSCHEA DI CORDOBA", image: "IMAGES/ARCHITECTURE/MOSCHEA DI CORDOBA.jpeg", categorie: "ARCHITECTURE" },
@@ -269,27 +276,39 @@
             { id: "P36", nom: "TIKI BLEU", image: "IMAGES/ILLUSTRATIONS/TIKI BLEU.jpeg", categorie: "ILLUSTRATIONS" },
             { id: "P37", nom: "TIKI ROUGE", image: "IMAGES/ILLUSTRATIONS/TIKI ROUGE.jpeg", categorie: "ILLUSTRATIONS" },
             { id: "P38", nom: "TIKI VERT", image: "IMAGES/ILLUSTRATIONS/TIKI VERT.jpeg", categorie: "ILLUSTRATIONS" },
-            { id: "P39", nom: "AU-DELA", image: "IMAGES/AFFICHES/AU-DELA.jpeg", categorie: "AFFICHES" },
+            { id: "P39", nom: "AU-DELÀ", image: "IMAGES/AFFICHES/AU-DELÀ.jpeg", categorie: "AFFICHES" },
             { id: "P40", nom: "FRAGMENTS DE NOUS", image: "IMAGES/AFFICHES/FRAGMENTS DE NOUS.jpg", categorie: "AFFICHES" },
             { id: "P41", nom: "INTRA-MUROS", image: "IMAGES/AFFICHES/INTRA-MUROS.jpeg", categorie: "AFFICHES" },
             { id: "P42", nom: "JO 2028", image: "IMAGES/AFFICHES/JO 2028.jpeg", categorie: "AFFICHES" }
         ];
 
+        let cart = {};
+
         function toggleMenu() {
             const panel = document.getElementById('menu-panel');
+            const overlay = document.getElementById('global-overlay');
             if (panel.classList.contains('open')) closeAll(); 
-            else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
+            else { closeAll(); panel.classList.add('open'); overlay.style.display = 'block'; }
         }
 
         function toggleCart() {
             const panel = document.getElementById('cart-panel');
+            const overlay = document.getElementById('global-overlay');
             if (panel.classList.contains('open')) closeAll(); 
-            else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
+            else { closeAll(); panel.classList.add('open'); overlay.style.display = 'block'; }
+        }
+
+        function toggleAbout() {
+            const panel = document.getElementById('about-panel');
+            const overlay = document.getElementById('global-overlay');
+            if (panel.classList.contains('open')) closeAll(); 
+            else { closeAll(); panel.classList.add('open'); overlay.style.display = 'block'; }
         }
 
         function closeAll() {
             document.getElementById('menu-panel').classList.remove('open');
             document.getElementById('cart-panel').classList.remove('open');
+            document.getElementById('about-panel').classList.remove('open');
             document.getElementById('global-overlay').style.display = 'none';
         }
 
@@ -318,24 +337,27 @@
             window.scrollTo({top: window.innerHeight, behavior: 'smooth'});
         }
 
-        let cart = {};
         function updateQuantity(id, change) {
             const p = PRODUITS.find(i => i.id === id);
             if(cart[id]) cart[id].qty += change;
             else if(change > 0) cart[id] = {nom: p.nom, qty: 1, image: p.image};
             if(cart[id] && cart[id].qty <= 0) delete cart[id];
             renderCart();
-            if(change > 0) { closeAll(); document.getElementById('cart-panel').classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
+            if(change > 0) { 
+                closeAll(); 
+                document.getElementById('cart-panel').classList.add('open'); 
+                document.getElementById('global-overlay').style.display = 'block'; 
+            }
         }
 
         function renderCart() {
             const container = document.getElementById('cart-items');
             const keys = Object.keys(cart);
-            container.innerHTML = keys.length ? '' : '<p style="opacity:0.5; font-style:italic; color:#000;">Votre liste est vide.</p>';
+            container.innerHTML = keys.length ? '' : '<p style="opacity:0.5; font-style:italic;">Votre liste est vide.</p>';
             keys.forEach(id => {
-                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; text-transform:uppercase; font-size:0.8rem; color:#000;">
+                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; text-transform:uppercase; font-size:0.8rem;">
                     <div style="display:flex; align-items:center; gap:10px;"><img src="${cart[id].image}" style="width:40px; height:50px; object-fit:cover;"><span>${cart[id].nom}</span></div>
-                    <div><button onclick="updateQuantity('${id}', -1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px; color:#000;">-</button> ${cart[id].qty} <button onclick="updateQuantity('${id}', 1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px; color:#000;">+</button></div>
+                    <div><button onclick="updateQuantity('${id}', -1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px;">-</button> ${cart[id].qty} <button onclick="updateQuantity('${id}', 1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px;">+</button></div>
                 </div>`;
             });
             document.getElementById('cart-summary').style.display = keys.length ? 'block' : 'none';
