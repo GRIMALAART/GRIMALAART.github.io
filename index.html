@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta name="google-site-verification" content="it3rkycRf06UwCLFWmzgPoisQwQ4hQM-dgFzEMdzAhk" />
-    
     <meta name="description" content="Portfolio artistique de Noé Grimal - GRIMALAART. Créations graphiques et posters originaux.">
 
     <title>GRIMALAART | NOE GRIMAL</title>
@@ -15,9 +14,7 @@
     <style>
         /* --- RESET & TYPO --- */
         * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+            margin: 0; padding: 0; box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent; 
         }
         
@@ -31,7 +28,6 @@
             overflow-x: hidden;
         }
 
-        /* FORCE LE NOIR SUR TOUT */
         a, button, span, div, p, h2, .cat-link, .add-btn, .qty-btn {
             color: #000000 !important;
             text-decoration: none;
@@ -43,183 +39,116 @@
         header {
             position: fixed;
             top: 20px; left: 20px; right: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            z-index: 100;
-            pointer-events: none;
+            display: flex; justify-content: space-between;
+            align-items: flex-start; z-index: 100; pointer-events: none;
         }
 
         .titles {
             font-size: clamp(2.5rem, 8vw, 8rem); 
-            line-height: 0.8;
-            font-weight: 700;
-            letter-spacing: -0.06em;
-            pointer-events: auto;
+            line-height: 0.8; font-weight: 700;
+            letter-spacing: -0.06em; pointer-events: auto;
             text-transform: uppercase;
         }
-
-        .titles a { color: #000000 !important; }
 
         /* --- MODAL FULLSCREEN --- */
         #fullscreen-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
+            backdrop-filter: blur(10px); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
             cursor: zoom-out;
         }
 
-        #fullscreen-overlay img { 
-            max-width: 95vw;
-            max-height: 90vh;
-            object-fit: contain;
-        }
+        #fullscreen-overlay img { max-width: 95vw; max-height: 90vh; object-fit: contain; }
 
         /* --- BOUTONS PERSISTANTS --- */
         .menu-trigger {
-            position: fixed;
-            bottom: 30px;
-            left: 20px;
-            z-index: 2001;
-            cursor: pointer;
-            background: none;
-            border: none;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            pointer-events: auto;
-            padding: 10px;
+            position: fixed; bottom: 30px; left: 20px; z-index: 2001;
+            cursor: pointer; background: none; border: none;
+            display: flex; flex-direction: column; gap: 6px; padding: 10px;
         }
-
-        .menu-trigger span {
-            width: 30px; height: 3px;
-            background: #000000 !important;
-            transition: 0.3s;
-        }
+        .menu-trigger span { width: 30px; height: 3px; background: #000000 !important; transition: 0.3s; }
 
         .favorite-trigger {
-            position: fixed;
-            bottom: 30px; right: 20px;
-            z-index: 2001;
-            cursor: pointer;
-            background: none; border: none;
+            position: fixed; bottom: 30px; right: 20px; z-index: 2001;
+            cursor: pointer; background: none; border: none;
             display: flex; justify-content: center; align-items: center;
-            padding: 10px;
-            pointer-events: auto;
+            padding: 10px; pointer-events: auto;
         }
-
         .favorite-trigger svg { width: 40px; height: 40px; fill: #000000 !important; }
 
         /* --- PANNEAUX --- */
         #menu-panel, #cart-panel {
-            position: fixed;
-            top: 0;
-            height: 100vh;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
+            position: fixed; top: 0; height: 100vh; z-index: 1000;
+            display: flex; flex-direction: column;
             transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
-            overflow-x: hidden;
-            background: #ffffff;
+            overflow-x: hidden; background: #ffffff;
         }
-
         #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
         #cart-panel { right: -100%; width: 40vw; padding: 40px; }
-
         #menu-panel.open { left: 0; }
         #cart-panel.open { right: 0; }
 
         .cat-link {
-            background: none; border: none;
-            font-family: inherit; 
-            font-weight: 900;
-            text-transform: uppercase; 
-            cursor: pointer;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            text-align: left;
-            line-height: 0.55; 
-            letter-spacing: -0.07em;
-            opacity: 0.2; 
-            transition: 0.2s;
-            padding: 8px 0;
-            white-space: nowrap;
+            background: none; border: none; font-family: inherit; font-weight: 900;
+            text-transform: uppercase; cursor: pointer;
+            font-size: clamp(2.5rem, 6vw, 4.5rem); text-align: left;
+            line-height: 0.55; letter-spacing: -0.07em;
+            opacity: 0.2; transition: 0.2s; padding: 8px 0; white-space: nowrap;
         }
-
-        .cat-link.active, .cat-link:hover { opacity: 1; color: #000000 !important; }
+        .cat-link.active, .cat-link:hover { opacity: 1; }
 
         #global-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(5px);
-            z-index: 999;
-            display: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(5px);
+            z-index: 999; display: none;
         }
 
-        /* --- MARQUEE & WORK LIST --- */
-        .hero { height: 100vh; display: flex; align-items: center; overflow: hidden; position: relative; }
-        .marquee-track { display: flex; width: fit-content; animation: marquee-infinite 25s linear infinite; }
-        .marquee-track img { width: 380px; margin-right: 15vw; }
-        @keyframes marquee-infinite { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
+        /* --- WORK LIST (FIXÉ POUR L'ALIGNEMENT PREMIÈRE LIGNE) --- */
         main { padding: 0 20px; }
+        .work-list { display: flex; flex-direction: column; align-items: center; gap: 120px; margin-top: 10vh; margin-bottom: 100px; }
         
-        .work-list { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 100px; 
-            margin-top: 10vh; 
-            margin-bottom: 100px; 
-        }
-        
-        /* CONFIGURATION ITEM POUR COLLER LÉGENDE */
-        .item { 
-            width: 100%; 
-            max-width: 300px; 
-            display: flex;
-            flex-direction: column;
-        }
+        .item { width: 100%; max-width: 300px; display: block; }
 
-        .img-box {
-            line-height: 0; /* Supprime l'espace résiduel sous l'image */
-        }
-
-        .img-box img { 
-            width: 100%; 
-            height: auto; 
-            display: block; 
-            margin-bottom: 0; 
-            cursor: zoom-in; 
-        }
+        .img-box { line-height: 0; display: block; }
+        .img-box img { width: 100%; height: auto; display: block; cursor: zoom-in; }
         
         .desc { 
-            font-size: 1.2rem; 
+            font-size: 0.85rem; 
             text-transform: uppercase; 
             display: flex; 
             justify-content: space-between; 
-            align-items: center; 
+            align-items: flex-start; /* Aligne bouton + texte sur le haut */
             font-weight: 700; 
-            line-height: 0.85; /* INTERLIGNAGE SERRÉ */
-            margin-top: -2px; /* COLLE À L'IMAGE */
-            padding-top: 5px; 
+            line-height: 1; 
+            margin-top: 0;
+            padding-top: 4px; /* Écart fixe avec l'image */
+            position: relative;
+            top: -2px; /* Colle la première ligne à l'image */
             color: #000000 !important; 
         }
         
-        .add-btn { background: none; border: none; font-weight: 900; font-size: 1.8rem; cursor: pointer; padding: 0px; color: #000000 !important; }
+        .add-btn { 
+            background: none; 
+            border: none; 
+            font-weight: 900; 
+            font-size: 1.8rem; 
+            cursor: pointer; 
+            padding: 0; 
+            margin-left: 15px;
+            line-height: 0.7; 
+            height: 0.85rem; /* Aligné sur la taille du texte .desc */
+            display: flex;
+            align-items: center;
+            flex-shrink: 0; /* Empêche le + d'être écrasé */
+        }
 
         /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
             .titles { font-size: 3rem; }
             #menu-panel, #cart-panel { width: 100vw; }
-            .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; white-space: nowrap; }
+            .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; }
             #menu-panel { padding: 20px; }
         }
     </style>
@@ -227,15 +156,11 @@
 <body>
 
     <div id="global-overlay" onclick="closeAll()"></div>
-
     <div id="fullscreen-overlay" onclick="this.style.display='none'">
         <img id="fullscreen-img" src="" alt="Aperçu">
     </div>
 
-    <button class="menu-trigger" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
-    </button>
-
+    <button class="menu-trigger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
     <button class="favorite-trigger" onclick="toggleCart()">
         <svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z"/></svg>
     </button>
@@ -255,13 +180,11 @@
         <h2 style="text-transform:uppercase; font-weight:900; margin-bottom: 40px;">Favoris</h2>
         <div id="cart-items"></div>
         <div id="cart-summary" style="display:none; margin-top:20px;">
-            <a href="https://www.instagram.com/grimalaart/" target="_blank" class="checkout-btn" style="display:block; background:#000; color:#fff !important; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
+            <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff !important; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
         </div>
     </div>
 
-    <header>
-        <div class="titles"><a onclick="goHome()">GRIMALAART</a></div>
-    </header>
+    <header><div class="titles"><a onclick="goHome()">GRIMALAART</a></div></header>
 
     <section class="hero">
         <div class="marquee-track">
@@ -269,9 +192,7 @@
         </div>
     </section>
 
-    <main id="work">
-        <div class="work-list"></div>
-    </main>
+    <main id="work"><div class="work-list"></div></main>
 
     <script>
         if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
@@ -323,13 +244,13 @@
 
         function toggleMenu() {
             const panel = document.getElementById('menu-panel');
-            if (panel.classList.contains('open')) { closeAll(); } 
+            if (panel.classList.contains('open')) closeAll(); 
             else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function toggleCart() {
             const panel = document.getElementById('cart-panel');
-            if (panel.classList.contains('open')) { closeAll(); } 
+            if (panel.classList.contains('open')) closeAll(); 
             else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
@@ -359,8 +280,7 @@
         }
 
         function filtrer(cat) {
-            afficherProduits(cat);
-            closeAll();
+            afficherProduits(cat); closeAll();
             document.querySelectorAll('.cat-link').forEach(btn => btn.classList.toggle('active', btn.innerText === cat));
             window.scrollTo({top: window.innerHeight, behavior: 'smooth'});
         }
@@ -372,11 +292,7 @@
             else if(change > 0) cart[id] = {nom: p.nom, qty: 1, image: p.image};
             if(cart[id] && cart[id].qty <= 0) delete cart[id];
             renderCart();
-            if(change > 0) { 
-                closeAll(); 
-                document.getElementById('cart-panel').classList.add('open'); 
-                document.getElementById('global-overlay').style.display = 'block'; 
-            }
+            if(change > 0) { closeAll(); document.getElementById('cart-panel').classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function renderCart() {
