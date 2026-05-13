@@ -3,76 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="google-site-verification" content="it3rkycRf06UwCLFWmzgPoisQwQ4hQM-dgFzEMdzAhk" />
+    <meta name="description" content="Portfolio artistique de Noé Grimal - GRIMALAART. Créations graphiques et posters originaux.">
+
     <title>GRIMALAART | NOE GRIMAL</title>
+    
+    <link rel="icon" type="image/svg+xml" href="GRIMALAART_BLEU.svg">
+
     <style>
         /* --- RESET & TYPO --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        html { scroll-snap-type: y proximity; scroll-behavior: smooth; }
+        
         body {
-            background-color: #ffffff; color: #000000;
+            background-color: #ffffff;
+            color: #000000;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased; overflow-x: hidden;
-        }
-        a, button, span, div, p, h2 { color: #000000 !important; text-decoration: none; border-radius: 0; }
-
-        /* --- OVERLAY GLOBAL (C'EST LUI QUI FAIT LE FLOU) --- */
-        #global-overlay {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(255, 255, 255, 0.2); /* Très léger voile blanc */
-            backdrop-filter: blur(15px); /* LE FLOU EST ICI */
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 999; display: none;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        /* --- PANNEAUX (ILS DEVIENNENT TOTALEMENT TRANSPARENTS) --- */
+        a, button, span, div, p, h2, .cat-link, .add-btn, .qty-btn {
+            color: #000000 !important;
+            text-decoration: none;
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+
+        /* --- HEADER FIXE --- */
+        header {
+            position: fixed;
+            top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between;
+            align-items: flex-start; z-index: 100; pointer-events: none;
+        }
+
+        .titles {
+            font-size: clamp(2.5rem, 8vw, 8rem); 
+            line-height: 0.8; font-weight: 700;
+            letter-spacing: -0.06em; pointer-events: auto;
+            text-transform: uppercase;
+        }
+
+        /* --- MODAL FULLSCREEN --- */
+        #fullscreen-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+            cursor: zoom-out;
+        }
+
+        #fullscreen-overlay img { max-width: 95vw; max-height: 90vh; object-fit: contain; }
+
+        /* --- BOUTONS PERSISTANTS --- */
+        .menu-trigger {
+            position: fixed; bottom: 30px; left: 20px; z-index: 2001;
+            cursor: pointer; background: none; border: none;
+            display: flex; flex-direction: column; gap: 6px; padding: 10px;
+        }
+        .menu-trigger span { width: 30px; height: 3px; background: #000000 !important; transition: 0.3s; }
+
+        .favorite-trigger {
+            position: fixed; bottom: 30px; right: 20px; z-index: 2001;
+            cursor: pointer; background: none; border: none;
+            display: flex; justify-content: center; align-items: center;
+            padding: 10px; pointer-events: auto;
+        }
+        .favorite-trigger svg { width: 40px; height: 40px; fill: #000000 !important; }
+
+        /* --- PANNEAUX (AVEC EFFET BLUR TRANSPARENT) --- */
         #menu-panel, #cart-panel {
             position: fixed; top: 0; height: 100vh; z-index: 1000;
             display: flex; flex-direction: column;
             transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
-            background: transparent; /* PLUS DE RECTANGLE BLANC */
-            backdrop-filter: none; /* PLUS DE FLOU ICI POUR ÉVITER LA LIGNE NETTE */
-            -webkit-backdrop-filter: none;
+            overflow-x: hidden; 
+            background: rgba(255, 255, 255, 0.8); /* Fond transparent */
+            backdrop-filter: blur(15px); /* Effet de flou */
+            -webkit-backdrop-filter: blur(15px);
         }
         #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
         #cart-panel { right: -100%; width: 40vw; padding: 40px; }
         #menu-panel.open { left: 0; }
         #cart-panel.open { right: 0; }
 
-        /* --- BOUTONS & LÉGENDES --- */
-        .titles { position: fixed; top: 20px; left: 20px; font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.8; font-weight: 700; text-transform: uppercase; z-index: 100; pointer-events: auto; }
-        .menu-trigger { position: fixed; bottom: 30px; left: 20px; z-index: 2001; cursor: pointer; background: none; border: none; display: flex; flex-direction: column; gap: 6px; padding: 10px; }
-        .menu-trigger span { width: 30px; height: 3px; background: #000000 !important; }
-        .favorite-trigger { position: fixed; bottom: 30px; right: 20px; z-index: 2001; cursor: pointer; background: none; border: none; padding: 10px; }
-        .favorite-trigger svg { width: 40px; height: 40px; fill: #000000 !important; }
-
-        .cat-link { background: none; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 0.55; opacity: 0.2; transition: 0.2s; padding: 8px 0; }
+        .cat-link {
+            background: none; border: none; font-family: inherit; font-weight: 900;
+            text-transform: uppercase; cursor: pointer;
+            font-size: clamp(2.5rem, 6vw, 4.5rem); text-align: left;
+            line-height: 0.55; letter-spacing: -0.07em;
+            opacity: 0.2; transition: 0.2s; padding: 8px 0; white-space: nowrap;
+        }
         .cat-link.active, .cat-link:hover { opacity: 1; }
 
+        #global-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(5px);
+            z-index: 999; display: none;
+        }
+
         /* --- MARQUEE --- */
-        .hero { height: 100vh; display: flex; align-items: center; overflow: hidden; }
-        .marquee-track { display: flex; width: max-content; animation: marquee-infinite 25s linear infinite; }
-        .marquee-track img { height: 250px; width: auto; margin-right: 15vw; flex-shrink: 0; }
-        @keyframes marquee-infinite { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .hero { 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            overflow: hidden; 
+            position: relative; 
+        }
+        
+        .marquee-track { 
+            display: flex; 
+            width: max-content; 
+            animation: marquee-infinite 25s linear infinite; 
+        }
+        
+        .marquee-track img { 
+            height: 250px; 
+            width: auto;
+            margin-right: 15vw; 
+            flex-shrink: 0;
+        }
 
-        /* --- WORK LIST (COLLÉ ET GRAND) --- */
-        .work-list { display: flex; flex-direction: column; align-items: center; gap: 120px; margin-top: 10vh; margin-bottom: 100px; padding: 0 20px; }
-        .item { width: 100%; max-width: 300px; }
-        .img-box { line-height: 0; }
-        .img-box img { width: 100%; height: auto; cursor: zoom-in; }
-        .desc { font-size: 1rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: flex-start; font-weight: 700; line-height: 1; padding-top: 4px; position: relative; top: -2px; }
-        .add-btn { background: none; border: none; font-weight: 900; font-size: 1.8rem; cursor: pointer; margin-left: 15px; line-height: 0.7; height: 1rem; display: flex; align-items: center; flex-shrink: 0; }
+        @keyframes marquee-infinite { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
 
+        /* --- WORK LIST (FIXÉ) --- */
+        main { padding: 0 20px; }
+        .work-list { display: flex; flex-direction: column; align-items: center; gap: 120px; margin-top: 10vh; margin-bottom: 100px; }
+        
+        .item { width: 100%; max-width: 300px; display: block; }
+
+        .img-box { line-height: 0; display: block; }
+        .img-box img { width: 100%; height: auto; display: block; cursor: zoom-in; }
+        
+        .desc { 
+            font-size: 1rem; /* Taille augmentée */
+            text-transform: uppercase; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; /* Aligne sur la première ligne */
+            font-weight: 700; 
+            line-height: 1; 
+            margin-top: 0;
+            padding-top: 4px; /* Distance fixe image/texte */
+            position: relative;
+            top: -2px; /* Colle le texte à l'image */
+            color: #000000 !important; 
+        }
+        
+        .add-btn { 
+            background: none; 
+            border: none; 
+            font-weight: 900; 
+            font-size: 1.8rem; 
+            cursor: pointer; 
+            padding: 0; 
+            margin-left: 15px;
+            line-height: 0.7; 
+            height: 1rem; 
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
+            .titles { font-size: 3rem; }
             #menu-panel, #cart-panel { width: 100vw; }
-            .cat-link { font-size: 2.8rem; }
+            .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; }
+            #menu-panel { padding: 20px; }
             .marquee-track img { height: 150px; }
+            .desc { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
+
     <div id="global-overlay" onclick="closeAll()"></div>
+    <div id="fullscreen-overlay" onclick="this.style.display='none'">
+        <img id="fullscreen-img" src="" alt="Aperçu">
+    </div>
+
     <button class="menu-trigger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
-    <button class="favorite-trigger" onclick="toggleCart()"><svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z"/></svg></button>
+    <button class="favorite-trigger" onclick="toggleCart()">
+        <svg viewBox="0 0 24 24"><path d="M12 2L14.4 9.2H22L15.8 13.8L18.2 21L12 16.4L5.8 21L8.2 13.8L2 9.2H9.6L12 2Z"/></svg>
+    </button>
 
     <div id="menu-panel">
         <button class="cat-link active" onclick="filtrer('TOUT')">TOUT</button>
@@ -88,32 +211,79 @@
     <div id="cart-panel">
         <h2 style="text-transform:uppercase; font-weight:900; margin-bottom: 40px;">Favoris</h2>
         <div id="cart-items"></div>
+        <div id="cart-summary" style="display:none; margin-top:20px;">
+            <a href="https://www.instagram.com/grimalaart/" target="_blank" style="display:block; background:#000; color:#fff !important; text-align:center; padding:20px; text-decoration:none; font-weight:900; text-transform:uppercase;">Contact Instagram</a>
+        </div>
     </div>
 
     <header><div class="titles"><a onclick="goHome()">GRIMALAART</a></div></header>
-    <section class="hero"><div class="marquee-track"><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""></div></section>
+
+    <section class="hero">
+        <div class="marquee-track">
+            <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
+        </div>
+    </section>
+
     <main id="work"><div class="work-list"></div></main>
 
     <script>
+        if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+
         const PRODUITS = [
-            { id: "P1", nom: "POSTER_01", image: "IMAGES/AFFICHES/JOUR1_SUMMER - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P1", nom: "POSTER (01)", image: "IMAGES/AFFICHES/JOUR1_SUMMER - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P2", nom: "POSTER (02)", image: "IMAGES/AFFICHES/JOUR2_HIVER - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P3", nom: "POSTER (03)", image: "IMAGES/AFFICHES/JOUR3_SUN - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P4", nom: "POSTER (04)", image: "IMAGES/AFFICHES/JOUR4_MOUNTAIN - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P5", nom: "POSTER (05)", image: "IMAGES/AFFICHES/JOUR5_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P6", nom: "POSTER (06)", image: "IMAGES/AFFICHES/JOUR6_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P7", nom: "POSTER (07)", image: "IMAGES/AFFICHES/JOUR7_TIKIS - Grande.jpeg", categorie: "AFFICHES" },
+            { id: "P8", nom: "POSTER (08)", image: "IMAGES/AFFICHES/JOUR8_TECKEL - Grande.jpeg", categorie: "AFFICHES" },
             { id: "P9", nom: "L'HOMME À LA TONDEUSE ET LA FILLE À LA RAQUETTE", image: "IMAGES/PEINTURES/TONDEUSE.jpg", categorie: "PEINTURES" },
-            { id: "P15", nom: "BOX TO BOX", image: "IMAGES/ARCHITECTURE/BOX TO BOX.jpeg", categorie: "ARCHITECTURE" }
-            /* Ajoute le reste de tes produits ici */
+            { id: "P10", nom: "TRANSITION ÉNERGÉTIQUE", image: "IMAGES/PEINTURES/STATION-SERVICE.jpg", categorie: "PEINTURES" },
+            { id: "P11", nom: "SLIP ROUGE", image: "IMAGES/PEINTURES/PLONGEUR.jpg", categorie: "PEINTURES" },
+            { id: "P12", nom: "KENDRICK, N95", image: "IMAGES/PEINTURES/KENDRICK.jpg", categorie: "PEINTURES" },
+            { id: "P13", nom: "BARQUETTE DE HOMARD", image: "IMAGES/PEINTURES/BARQUETTE.jpg", categorie: "PEINTURES" },
+            { id: "P14", nom: "TROIS HOMMES À LA PISCINE", image: "IMAGES/PEINTURES/3 HOMMES EN SLIP.jpg", categorie: "PEINTURES" },
+            { id: "P15", nom: "BOX TO BOX", image: "IMAGES/ARCHITECTURE/BOX TO BOX.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P16", nom: "CARTE ROUEN:NANTES", image: "IMAGES/ARCHITECTURE/CARTE ROUEN:NANTES.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P17", nom: "CARTE SARDAIGNE", image: "IMAGES/ARCHITECTURE/CARTE SARDAIGNE.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P18", nom: "ESADHAR", image: "IMAGES/ARCHITECTURE/ESADHAR.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P19", nom: "MOSCHEA DI CORDOBA", image: "IMAGES/ARCHITECTURE/MOSCHEA DI CORDOBA.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P20", nom: "MOTEUR AÉRONAUTIQUE", image: "IMAGES/ARCHITECTURE/MOTEUR AERONAUTIQUE.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P21", nom: "PERSPECTIVE ESADHAR (1)", image: "IMAGES/ARCHITECTURE/PERSPECTIVE ESADHAR_1.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P22", nom: "PERSPECTIVE ESADHAR (2)", image: "IMAGES/ARCHITECTURE/PERSPECTIVE ESADHAR_2.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P23", nom: "PERSPECTIVE ESADHAR (3)", image: "IMAGES/ARCHITECTURE/PERSPECTIVE ESADHAR_3.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P24", nom: "PERSPECTIVE MONTEPONI, SARDAIGNE", image: "IMAGES/ARCHITECTURE/PERSPECTIVE MONTEPONI, SARDAIGNE.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P25", nom: "TRANSFERT, NANTES", image: "IMAGES/ARCHITECTURE/TRANSFERT, NANTES.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P26", nom: "WORKSHOP ZIGZAG", image: "IMAGES/ARCHITECTURE/WORKSHOP ZIGZAG.jpeg", categorie: "ARCHITECTURE" },
+            { id: "P27", nom: "CROCO", image: "IMAGES/ILLUSTRATIONS/CROCO.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P28", nom: "ELEFANT", image: "IMAGES/ILLUSTRATIONS/ELEFANT.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P29", nom: "FLAMINGO", image: "IMAGES/ILLUSTRATIONS/FLAMINGO.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P30", nom: "GIRAFE", image: "IMAGES/ILLUSTRATIONS/GIRAFE.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P31", nom: "HOMARD", image: "IMAGES/ILLUSTRATIONS/HOMARD.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P32", nom: "KIKI", image: "IMAGES/ILLUSTRATIONS/KIKI.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P33", nom: "BELLA E BIANCA", image: "IMAGES/ILLUSTRATIONS/OLD BEACHES.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P34", nom: "OTARIE", image: "IMAGES/ILLUSTRATIONS/OTARIE.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P35", nom: "STICKER (01)", image: "IMAGES/ILLUSTRATIONS/STICKER_01.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P36", nom: "TIKI BLEU", image: "IMAGES/ILLUSTRATIONS/TIKI BLEU.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P37", nom: "TIKI ROUGE", image: "IMAGES/ILLUSTRATIONS/TIKI ROUGE.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P38", nom: "TIKI VERT", image: "IMAGES/ILLUSTRATIONS/TIKI VERT.jpeg", categorie: "ILLUSTRATIONS" },
+            { id: "P39", nom: "AU-DELÀ", image: "IMAGES/AFFICHES/AU-DELÀ.jpeg", categorie: "AFFICHES" },
+            { id: "P40", nom: "FRAGMENTS DE NOUS", image: "IMAGES/AFFICHES/FRAGMENTS DE NOUS.jpg", categorie: "AFFICHES" },
+            { id: "P41", nom: "INTRA-MUROS", image: "IMAGES/AFFICHES/INTRA-MUROS.jpeg", categorie: "AFFICHES" },
+            { id: "P42", nom: "JO 2028", image: "IMAGES/AFFICHES/JO 2028.jpeg", categorie: "AFFICHES" }
         ];
 
         function toggleMenu() {
             const panel = document.getElementById('menu-panel');
-            const overlay = document.getElementById('global-overlay');
-            if (panel.classList.contains('open')) { closeAll(); } 
-            else { closeAll(); panel.classList.add('open'); overlay.style.display = 'block'; }
+            if (panel.classList.contains('open')) closeAll(); 
+            else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function toggleCart() {
             const panel = document.getElementById('cart-panel');
-            const overlay = document.getElementById('global-overlay');
-            if (panel.classList.contains('open')) { closeAll(); } 
-            else { closeAll(); panel.classList.add('open'); overlay.style.display = 'block'; }
+            if (panel.classList.contains('open')) closeAll(); 
+            else { closeAll(); panel.classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
         }
 
         function closeAll() {
@@ -122,21 +292,52 @@
             document.getElementById('global-overlay').style.display = 'none';
         }
 
+        function openFullscreen(src) {
+            const overlay = document.getElementById('fullscreen-overlay');
+            document.getElementById('fullscreen-img').src = src;
+            overlay.style.display = 'flex';
+        }
+
         function afficherProduits(filtre = 'TOUT') {
             const list = document.querySelector('.work-list');
             list.innerHTML = '';
             const items = filtre === 'TOUT' ? PRODUITS : PRODUITS.filter(p => p.categorie === filtre);
             items.forEach(p => {
-                list.innerHTML += `<div class="item">
-                    <div class="img-box"><img src="${p.image}" alt="${p.nom}"></div>
-                    <div class="desc"><span>${p.nom}</span><button class="add-btn">+</button></div>
-                </div>`;
+                list.innerHTML += `
+                    <div class="item">
+                        <div class="img-box" onclick="openFullscreen('${p.image}')"><img src="${p.image}" alt="${p.nom}"></div>
+                        <div class="desc"><span>${p.nom}</span><button class="add-btn" onclick="event.stopPropagation(); updateQuantity('${p.id}', 1)">+</button></div>
+                    </div>`;
             });
         }
 
         function filtrer(cat) {
             afficherProduits(cat); closeAll();
             document.querySelectorAll('.cat-link').forEach(btn => btn.classList.toggle('active', btn.innerText === cat));
+            window.scrollTo({top: window.innerHeight, behavior: 'smooth'});
+        }
+
+        let cart = {};
+        function updateQuantity(id, change) {
+            const p = PRODUITS.find(i => i.id === id);
+            if(cart[id]) cart[id].qty += change;
+            else if(change > 0) cart[id] = {nom: p.nom, qty: 1, image: p.image};
+            if(cart[id] && cart[id].qty <= 0) delete cart[id];
+            renderCart();
+            if(change > 0) { closeAll(); document.getElementById('cart-panel').classList.add('open'); document.getElementById('global-overlay').style.display = 'block'; }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const keys = Object.keys(cart);
+            container.innerHTML = keys.length ? '' : '<p style="opacity:0.5; font-style:italic; color:#000;">Votre liste est vide.</p>';
+            keys.forEach(id => {
+                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; font-weight:700; text-transform:uppercase; font-size:0.8rem; color:#000;">
+                    <div style="display:flex; align-items:center; gap:10px;"><img src="${cart[id].image}" style="width:40px; height:50px; object-fit:cover;"><span>${cart[id].nom}</span></div>
+                    <div><button onclick="updateQuantity('${id}', -1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px; color:#000;">-</button> ${cart[id].qty} <button onclick="updateQuantity('${id}', 1)" style="border:none; background:none; font-size:1.5rem; cursor:pointer; padding:5px; color:#000;">+</button></div>
+                </div>`;
+            });
+            document.getElementById('cart-summary').style.display = keys.length ? 'block' : 'none';
         }
 
         afficherProduits();
