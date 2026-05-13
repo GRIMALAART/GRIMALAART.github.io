@@ -80,7 +80,7 @@
             max-height: 90vh; /* Ne dépasse jamais la hauteur de l'écran */
             object-fit: contain; /* Garde le ratio de l'image */
         }
-        
+
         /* --- BOUTONS PERSISTANTS --- */
         .menu-trigger {
             position: fixed;
@@ -121,7 +121,8 @@
             position: fixed;
             top: 0;
             height: 100vh;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
             z-index: 1000;
             display: flex;
             flex-direction: column;
