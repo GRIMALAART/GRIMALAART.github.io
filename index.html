@@ -105,7 +105,35 @@
             z-index: 999; display: none;
         }
 
-        /* --- WORK LIST (FIXÉ POUR L'ALIGNEMENT PREMIÈRE LIGNE) --- */
+        /* --- MARQUEE (CORRECTIF POUR SVG) --- */
+        .hero { 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            overflow: hidden; 
+            position: relative; 
+        }
+        
+        .marquee-track { 
+            display: flex; 
+            width: max-content; 
+            animation: marquee-infinite 25s linear infinite; 
+        }
+        
+        /* On force la taille des logos SVG pour éviter qu'ils ne s'étendent */
+        .marquee-track img { 
+            height: 120px; /* Ajuste cette hauteur selon tes préférences */
+            width: auto;
+            margin-right: 15vw; 
+            flex-shrink: 0;
+        }
+        
+        @keyframes marquee-infinite { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* --- WORK LIST --- */
         main { padding: 0 20px; }
         .work-list { display: flex; flex-direction: column; align-items: center; gap: 120px; margin-top: 10vh; margin-bottom: 100px; }
         
@@ -119,13 +147,13 @@
             text-transform: uppercase; 
             display: flex; 
             justify-content: space-between; 
-            align-items: flex-start; /* Aligne bouton + texte sur le haut */
+            align-items: flex-start; 
             font-weight: 700; 
             line-height: 1; 
             margin-top: 0;
-            padding-top: 4px; /* Écart fixe avec l'image */
+            padding-top: 4px; 
             position: relative;
-            top: -2px; /* Colle la première ligne à l'image */
+            top: -2px; 
             color: #000000 !important; 
         }
         
@@ -138,10 +166,10 @@
             padding: 0; 
             margin-left: 15px;
             line-height: 0.7; 
-            height: 0.85rem; /* Aligné sur la taille du texte .desc */
+            height: 0.85rem; 
             display: flex;
             align-items: center;
-            flex-shrink: 0; /* Empêche le + d'être écrasé */
+            flex-shrink: 0;
         }
 
         /* --- RESPONSIVE MOBILE --- */
@@ -150,6 +178,7 @@
             #menu-panel, #cart-panel { width: 100vw; }
             .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; }
             #menu-panel { padding: 20px; }
+            .marquee-track img { height: 80px; } /* Plus petit sur mobile */
         }
     </style>
 </head>
@@ -188,7 +217,7 @@
 
     <section class="hero">
         <div class="marquee-track">
-            <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
+            <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
         </div>
     </section>
 
