@@ -105,7 +105,7 @@
             z-index: 999; display: none;
         }
 
-        /* --- MARQUEE (CORRECTIF POUR SVG) --- */
+        /* --- MARQUEE --- */
         .hero { 
             height: 100vh; 
             display: flex; 
@@ -120,20 +120,13 @@
             animation: marquee-infinite 25s linear infinite; 
         }
         
-        /* On force la taille des logos SVG pour éviter qu'ils ne s'étendent */
         .marquee-track img { 
-            height: 200px; /* Ajuste cette hauteur selon tes préférences */
+            height: 250px; 
             width: auto;
             margin-right: 15vw; 
             flex-shrink: 0;
         }
 
-        /* --- Ajustement pour Mobile --- */
-        @media (max-width: 768px) {
-            .marquee-track img { 
-                height: 180px; /* Taille intermédiaire pour les téléphones */
-            }
-            
         @keyframes marquee-infinite { 
             0% { transform: translateX(0); } 
             100% { transform: translateX(-50%); } 
@@ -184,7 +177,7 @@
             #menu-panel, #cart-panel { width: 100vw; }
             .cat-link { font-size: 2.8rem; line-height: 0.55; padding: 12px 0; }
             #menu-panel { padding: 20px; }
-            .marquee-track img { height: 80px; } /* Plus petit sur mobile */
+            .marquee-track img { height: 150px; } /* Taille mobile */
         }
     </style>
 </head>
@@ -223,6 +216,7 @@
 
     <section class="hero">
         <div class="marquee-track">
+            <!-- Logos répétés pour un défilement fluide -->
             <img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt=""><img src="GRIMALAART_BLEU.svg" alt="">
         </div>
     </section>
