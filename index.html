@@ -78,15 +78,14 @@
         }
         .favorite-trigger svg { width: 40px; height: 40px; fill: #000000 !important; }
 
-        /* --- PANNEAUX (AVEC EFFET BLUR TRANSPARENT) --- */
+        /* --- PANNEAUX (MODIFIÉS POUR TRANSPARENCE TOTALE) --- */
         #menu-panel, #cart-panel {
             position: fixed; top: 0; height: 100vh; z-index: 1000;
             display: flex; flex-direction: column;
             transition: all 0.5s cubic-bezier(0.8, 0, 0.2, 1);
             overflow-x: hidden; 
-            background: rgba(255, 255, 255, 0.8); /* Fond transparent */
-            backdrop-filter: blur(15px); /* Effet de flou */
-            -webkit-backdrop-filter: blur(15px);
+            background: transparent; /* Suppression de l'arrière-plan du panneau */
+            backdrop-filter: none;    /* Suppression du flou local pour éviter la ligne nette */
         }
         #menu-panel { left: -100%; width: 850px; padding: 40px; justify-content: center; }
         #cart-panel { right: -100%; width: 40vw; padding: 40px; }
@@ -102,9 +101,12 @@
         }
         .cat-link.active, .cat-link:hover { opacity: 1; }
 
+        /* --- GLOBAL OVERLAY (C'EST LUI QUI FAIT LE BLUR SUR TOUT LE FOND) --- */
         #global-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(255,255,255,0.7); backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.1); /* Voile blanc ultra léger */
+            backdrop-filter: blur(20px);           /* Flou appliqué à tout l'écran */
+            -webkit-backdrop-filter: blur(20px);
             z-index: 999; display: none;
         }
 
@@ -135,7 +137,7 @@
             100% { transform: translateX(-50%); } 
         }
 
-        /* --- WORK LIST (FIXÉ) --- */
+        /* --- WORK LIST --- */
         main { padding: 0 20px; }
         .work-list { display: flex; flex-direction: column; align-items: center; gap: 120px; margin-top: 10vh; margin-bottom: 100px; }
         
@@ -145,17 +147,17 @@
         .img-box img { width: 100%; height: auto; display: block; cursor: zoom-in; }
         
         .desc { 
-            font-size: 1rem; /* Taille augmentée */
+            font-size: 1rem; 
             text-transform: uppercase; 
             display: flex; 
             justify-content: space-between; 
-            align-items: flex-start; /* Aligne sur la première ligne */
+            align-items: flex-start; 
             font-weight: 700; 
             line-height: 1; 
             margin-top: 0;
-            padding-top: 4px; /* Distance fixe image/texte */
+            padding-top: 4px; 
             position: relative;
-            top: -2px; /* Colle le texte à l'image */
+            top: -2px; 
             color: #000000 !important; 
         }
         
