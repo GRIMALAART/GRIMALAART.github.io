@@ -75,6 +75,12 @@
             cursor: zoom-out;
         }
 
+        #fullscreen-overlay img { 
+            max-width: 95vw; /* Ne dépasse jamais la largeur de l'écran */
+            max-height: 90vh; /* Ne dépasse jamais la hauteur de l'écran */
+            object-fit: contain; /* Garde le ratio de l'image */
+        }
+        
         /* --- BOUTONS PERSISTANTS --- */
         .menu-trigger {
             position: fixed;
